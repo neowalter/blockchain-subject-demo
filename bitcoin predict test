@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 
 neocoin = pd.read_csv('market-price180 .csv')
 neocoin.drop(['date'],1,inplace=True)
+
 #neocoin['date'] = pd.to_datetime(neocoin["date"])
 #neocoin.set_index("date", inplace=True)
 
