@@ -1,0 +1,45 @@
+# bitcoin price predict test
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+
+neocoin = pd.read_csv('market-price180 .csv')
+neocoin.drop(['date'],1,inplace=True)
+#neocoin['date'] = pd.to_datetime(neocoin["date"])
+#neocoin.set_index("date", inplace=True)
+
+comprice = np.array(neocoin['price'][-20:])
+
+predic_days = 20
+
+neocoin['prediction'] = neocoin[['price']].shift(-predic_days)
+X = np.array(neocoin.drop(['prediction'], 1))
+X = X[:len(neocoin)-predic_days]
+
+Y = np.array(neocoin['prediction'])
+Y = Y[:-predic_days]
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(X,Y, test_size= 0.2)
+
+predic_days_array = np.array(neocoin.drop(['prediction'],1))[-predic_days:]
+
+from sklearn.svm import SVR
+svr_rbf = SVR(kernel='rbf', C=1e3, gamma=0.00001)
+svr_rbf.fit(x_train, y_train)
+
+svr_rbf_confid = svr_rbf.score(x_test, y_test)
+svm_prediction = svr_rbf.predict(x_test)
+svm_prediction = svr_rbf.predict(predic_days_array)
+
+plt.figure(figsize=(16,8))
+plt.title('Price prediction comparassion')
+plt.plot(comprice)
+plt.plot(svm_prediction)
+plt.legend(['price','predic price'], loc='lower right')
+plt.axis([0,19,6500,9000])
+plt.xlabel('Days',fontsize=18)
+plt.xticks(np.arange(0, 20, 1))
+plt.ylabel('Price USD',fontsize=18)
+plt.grid(True)
+plt.show()
