@@ -12,9 +12,16 @@ contract AIFactory {
         string name;
         }
     AI[] public AIs;
+     mapping (uint => address) public AIToOwner;
+     mapping (address => uint) ownerAICount;
+    
     
     function _createAI(string memory _name, uint _dna) private {
         uint id = AIs.push(AI(_name, _dna)) -1;
+        
+        AIToOwner[id] = msg.sender;
+        ownerAICount[msg.sender]++;
+
         
         emit NewAI(id, _name, _dna);
       
@@ -26,9 +33,19 @@ contract AIFactory {
     }
     function createRandomAI(string memory _name) public {
         
+        require(ownerAICount[msg.sender] == 0);
+        
         uint randDna = _generateRandomDna(_name);
         
         _createAI(_name, randDna);
         
     }
+}
+********************************************************************************************************************************
+--------------------------------------------------------------------------------------------------------------------------------
+
+import "./AIfactory.sol";
+
+contract AIevolve is AIFactory {
+
 }
