@@ -8,4 +8,6 @@ length:1 min 45 sec
 
 frame:1600*900
 
-idea from Dimitri    gmail: dimidimi783@gmail.com
+idea from Dimitri   
+
+gmail: dimidimi783@gmail.com
